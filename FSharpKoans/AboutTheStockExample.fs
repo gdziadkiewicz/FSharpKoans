@@ -60,6 +60,15 @@ module ``about the stock example`` =
 
     [<Koan>]
     let YouGotTheAnswerCorrect() =
-        let result =  __
+        let parse [|date; openPrice; _; _; closePrice; _; _|] =
+            let o = double openPrice
+            let c = double closePrice
+            (date, abs (c-o))
+        let result =
+            stockData
+            |> Seq.skip 1
+            |> Seq.map (fun (x:string) -> x.Split([|','|]) |> parse)
+            |> Seq.maxBy snd
+            |> fst
         
         AssertEquality "2012-03-13" result
